@@ -1,0 +1,27 @@
+---
+interface Props {
+  tag: string;
+  interactive?: boolean;
+  active?: boolean;
+}
+
+const { tag, interactive = false, active = false } = Astro.props;
+---
+
+{interactive ? (
+  <button
+    data-tag={tag}
+    class:list={[
+      'font-mono text-xs px-2 py-0.5 rounded border transition-colors duration-150 cursor-pointer',
+      active
+        ? 'bg-rz-accent/10 text-rz-accent border-rz-accent/40'
+        : 'text-rz-muted border-rz-border hover:text-rz-text hover:border-rz-muted',
+    ]}
+  >
+    {tag}
+  </button>
+) : (
+  <span class="font-mono text-xs px-2 py-0.5 rounded border border-rz-border text-rz-muted">
+    {tag}
+  </span>
+)}

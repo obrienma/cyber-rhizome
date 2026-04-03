@@ -1,0 +1,58 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../components/Layout.astro';
+import TagPill from '../../components/TagPill.astro';
+import Giscus from '../../components/Giscus.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return posts.map(post => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const { title, description, date, tags } = post.data;
+
+const formatted = date.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+// Rough reading time
+const wordCount = (post.body ?? '').split(/\s+/).length;
+const readingTime = Math.max(1, Math.ceil(wordCount / 200));
+---
+
+<Layout title={title} description={description}>
+  <!-- Back -->
+  <a href="/blog" class="font-mono text-xs text-rz-muted hover:text-rz-accent transition-colors mb-10 inline-block">
+    ← writing
+  </a>
+
+  <!-- Header -->
+  <header class="mb-10">
+    <h1 class="font-mono text-xl text-rz-text leading-snug mb-4">
+      {title}
+    </h1>
+    <div class="flex items-center gap-4 mb-4">
+      <time class="font-mono text-xs text-rz-muted">{formatted}</time>
+      <span class="font-mono text-xs text-rz-muted">{readingTime} min read</span>
+    </div>
+    <div class="flex flex-wrap gap-1.5">
+      {tags.map(tag => <TagPill tag={tag} />)}
+    </div>
+  </header>
+
+  <!-- Content -->
+  <div class="prose prose-sm max-w-none">
+    <Content />
+  </div>
+
+  <!-- Comments -->
+  <Giscus />
+</Layout>

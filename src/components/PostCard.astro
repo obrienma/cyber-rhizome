@@ -1,0 +1,40 @@
+---
+import TagPill from './TagPill.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  date: Date;
+  tags: string[];
+  slug: string;
+}
+
+const { title, description, date, tags, slug } = Astro.props;
+
+const formatted = date.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+});
+---
+
+<article
+  data-tags={tags.join(',')}
+  class="group py-6 border-b border-rz-border last:border-0"
+>
+  <div class="flex items-baseline gap-4 mb-2">
+    <time class="font-mono text-xs text-rz-muted shrink-0">{formatted}</time>
+    <div class="flex flex-wrap gap-1.5">
+      {tags.map(tag => <TagPill tag={tag} />)}
+    </div>
+  </div>
+
+  <a href={`/blog/${slug}`} class="block group/link">
+    <h2 class="text-base font-mono text-rz-text group-hover/link:text-rz-accent transition-colors duration-150 mb-1">
+      {title}
+    </h2>
+    <p class="text-sm text-rz-muted leading-relaxed">
+      {description}
+    </p>
+  </a>
+</article>

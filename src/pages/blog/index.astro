@@ -1,0 +1,83 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../components/Layout.astro';
+import PostCard from '../../components/PostCard.astro';
+import TagPill from '../../components/TagPill.astro';
+
+const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+const posts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+// Collect all unique tags
+const allTags = [...new Set(posts.flatMap(p => p.data.tags))].sort();
+---
+
+<Layout title="writing" description="Notes on engineering, making, and whatever else.">
+  <header class="mb-10">
+    <h1 class="font-mono text-rz-text text-lg mb-2">writing</h1>
+    <p class="text-sm text-rz-muted">{posts.length} post{posts.length !== 1 ? 's' : ''}</p>
+  </header>
+
+  <!-- Tag filter -->
+  {allTags.length > 0 && (
+    <div id="tag-filters" class="flex flex-wrap gap-2 mb-10">
+      <button
+        data-tag="all"
+        class="font-mono text-xs px-2 py-0.5 rounded border border-rz-accent/40 bg-rz-accent/10 text-rz-accent transition-colors duration-150 cursor-pointer"
+      >
+        all
+      </button>
+      {allTags.map(tag => (
+        <TagPill tag={tag} interactive={true} />
+      ))}
+    </div>
+  )}
+
+  <!-- Post list -->
+  <div id="post-list">
+    {posts.map(post => (
+      <PostCard
+        title={post.data.title}
+        description={post.data.description}
+        date={post.data.date}
+        tags={post.data.tags}
+        slug={post.id}
+      />
+    ))}
+  </div>
+
+  <p id="no-results" class="hidden font-mono text-sm text-rz-muted py-8">
+    no posts with that tag.
+  </p>
+</Layout>
+
+<script>
+  const filterButtons = document.querySelectorAll<HTMLButtonElement>('#tag-filters [data-tag]');
+  const posts = document.querySelectorAll<HTMLElement>('#post-list article[data-tags]');
+  const noResults = document.getElementById('no-results');
+
+  function setActive(btn: HTMLButtonElement) {
+    filterButtons.forEach(b => {
+      b.classList.remove('bg-rz-accent/10', 'text-rz-accent', 'border-rz-accent/40');
+      b.classList.add('text-rz-muted', 'border-rz-border');
+    });
+    btn.classList.add('bg-rz-accent/10', 'text-rz-accent', 'border-rz-accent/40');
+    btn.classList.remove('text-rz-muted', 'border-rz-border');
+  }
+
+  filterButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tag = btn.dataset.tag!;
+      setActive(btn);
+
+      let visible = 0;
+      posts.forEach(post => {
+        const tags = (post.dataset.tags ?? '').split(',');
+        const show = tag === 'all' || tags.includes(tag);
+        post.style.display = show ? '' : 'none';
+        if (show) visible++;
+      });
+
+      noResults?.classList.toggle('hidden', visible > 0);
+    });
+  });
+</script>

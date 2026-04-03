@@ -1,0 +1,80 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+
+/* ─── Design tokens ─────────────────────────────────────── */
+@theme {
+  --color-rz-bg:      #0a0a0a;
+  --color-rz-surface: #111111;
+  --color-rz-border:  #222222;
+  --color-rz-text:    #e5e5e5;
+  --color-rz-muted:   #6b7280;
+  --color-rz-accent:  #6ee7b7;
+
+  --font-mono: 'JetBrains Mono Variable', 'JetBrains Mono', monospace;
+  --font-sans: 'Inter Variable', Inter, sans-serif;
+}
+
+/* ─── Base ───────────────────────────────────────────────── */
+@layer base {
+  html {
+    background-color: #0a0a0a;
+    color: #e5e5e5;
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background-color: #6ee7b7;
+    color: #0a0a0a;
+  }
+
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: #0a0a0a; }
+  ::-webkit-scrollbar-thumb { background: #374151; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+}
+
+/* ─── Prose (blog posts) ─────────────────────────────────── */
+@layer components {
+  .prose {
+    --tw-prose-body:          #e5e5e5;
+    --tw-prose-headings:      #f5f5f5;
+    --tw-prose-lead:          #a3a3a3;
+    --tw-prose-links:         #6ee7b7;
+    --tw-prose-bold:          #f5f5f5;
+    --tw-prose-counters:      #6b7280;
+    --tw-prose-bullets:       #374151;
+    --tw-prose-hr:            #222222;
+    --tw-prose-quotes:        #e5e5e5;
+    --tw-prose-quote-borders: #6ee7b7;
+    --tw-prose-captions:      #6b7280;
+    --tw-prose-code:          #6ee7b7;
+    --tw-prose-pre-code:      #e5e5e5;
+    --tw-prose-pre-bg:        #111111;
+    --tw-prose-th-borders:    #374151;
+    --tw-prose-td-borders:    #222222;
+    max-width: none;
+  }
+
+  .prose a {
+    text-decoration: none;
+    border-bottom: 1px solid color-mix(in srgb, #6ee7b7 40%, transparent);
+    transition: color 0.15s;
+  }
+
+  .prose a:hover { color: #a7f3d0; }
+
+  .prose code {
+    font-family: 'JetBrains Mono Variable', monospace;
+    font-size: 0.875em;
+    font-weight: 400;
+  }
+
+  .prose code::before,
+  .prose code::after { content: ''; }
+
+  .prose pre {
+    border: 1px solid #222222;
+  }
+}

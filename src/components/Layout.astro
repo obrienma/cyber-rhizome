@@ -1,0 +1,129 @@
+---
+import '@fontsource-variable/inter';
+import '@fontsource-variable/jetbrains-mono';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = 'cyber-rhizome — notes from the network' } = Astro.props;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const currentPath = Astro.url.pathname;
+
+const navLinks = [
+  { href: '/blog',     label: 'writing'  },
+  { href: '/projects', label: 'projects' },
+  { href: '/contact',  label: 'contact'  },
+];
+---
+
+<!doctype html>
+<html lang="en" class="bg-rz-bg text-rz-text font-sans">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title === 'cyber-rhizome' ? title : `${title} — cyber-rhizome`}</title>
+  </head>
+
+  <body class="min-h-screen flex flex-col antialiased">
+
+    <!-- Film grain -->
+    <div class="grain-overlay" aria-hidden="true"></div>
+
+    <!-- Nav -->
+    <header class="sticky top-0 z-50 border-b border-rz-border/50 bg-rz-bg/92 backdrop-blur-md">
+      <nav class="max-w-2xl mx-auto px-6 h-[52px] flex items-center justify-between">
+
+        <a href="/" class="flex items-center font-mono text-sm tracking-tight group">
+          <span class="text-rz-muted/60 text-xs">~/</span>
+          <span class="text-rz-text group-hover:text-rz-accent transition-colors duration-200">cyber-rhizome</span>
+          <span class="cursor-blink text-rz-accent ml-px text-xs leading-none">▋</span>
+        </a>
+
+        <ul class="flex items-center gap-5">
+          {navLinks.map(({ href, label }) => {
+            const active = currentPath.startsWith(href);
+            return (
+              <li>
+                <a
+                  href={href}
+                  class:list={[
+                    'font-mono text-xs tracking-wide transition-colors duration-150',
+                    active ? 'text-rz-accent' : 'text-rz-muted hover:text-rz-text',
+                  ]}
+                >
+                  {active ? `[${label}]` : label}
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+
+      </nav>
+    </header>
+
+    <!-- Page content -->
+    <main class="flex-1 max-w-2xl mx-auto w-full px-6 py-16 page-enter">
+      <slot />
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-rz-border/50">
+      <div class="max-w-2xl mx-auto px-6 h-12 flex items-center justify-between">
+        <span class="font-mono text-[11px] text-rz-muted/50 tracking-tight">
+          © {new Date().getFullYear()} cyber-rhizome
+        </span>
+        <a
+          href="https://github.com/YOUR_USERNAME"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="font-mono text-[11px] text-rz-muted/50 hover:text-rz-text transition-colors"
+        >
+          github
+        </a>
+      </div>
+    </footer>
+
+  </body>
+</html>
+
+<style>
+  /* Subtle film grain — physical depth on the flat dark bg */
+  .grain-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.038;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 256px 256px;
+  }
+
+  /* Terminal cursor blink on brand */
+  .cursor-blink {
+    animation: blink 1.15s step-end infinite;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+  }
+
+  /* Soft entrance — barely perceptible, just right */
+  .page-enter {
+    animation: enter 0.25s ease-out both;
+  }
+
+  @keyframes enter {
+    from { opacity: 0; transform: translateY(5px); }
+    to   { opacity: 1; transform: translateY(0);   }
+  }
+</style>

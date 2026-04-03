@@ -1,0 +1,6 @@
+title: health-appointment-scheduler
+description: Role-based appointment scheduling platform for healthcare providers and patients. Laravel 11, React 18, TypeScript, Inertia.js, PostgreSQL.
+url: https://github.com/YOUR_USERNAME/Health-Appointment-Scheduler
+tags: [dev, laravel, react, typescript, postgresql]
+status: active
+featured: true

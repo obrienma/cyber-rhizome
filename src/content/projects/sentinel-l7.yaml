@@ -1,0 +1,6 @@
+title: sentinel-l7
+description: AI-driven compliance monitoring for financial transactions. Multi-process system — stream consumer, web dashboard, reclaimer — with semantic caching and policy RAG via Upstash Vector.
+url: https://github.com/YOUR_USERNAME/sentinel-l7
+tags: [dev, laravel, vue, redis, ai, php]
+status: active
+featured: true
