@@ -10,4 +10,4 @@ WORKDIR /app
 COPY --from=builder /app/dist ./dist
 RUN npm install -g serve
 EXPOSE 3000
-CMD serve dist --single --listen tcp://0.0.0.0:${PORT:-3000}
+CMD sh -c "serve dist --single -p ${PORT:-3000}"
